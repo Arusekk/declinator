@@ -1,0 +1,63 @@
+[{
+	"#include": "adjective"
+},{
+	"#include": "noun",
+	"dative": {
+		"m": {
+			"cho":"sze",
+			"szo":"szy",
+			"czo":"czy",
+			"ho":"że",
+			"do":"dzie",
+			"go":"dze",
+			"ko":"ce",
+			"lo":"li",
+			"ło":"le",
+			"ro":"rze",
+			"to":"cie",
+			"żo":"ży",
+			"jo":"i",
+			"io":"ii",
+			"eo":"ei",
+			"o":"ie"
+		}
+	},
+	"accusative": {
+		"m": {
+			"o":"ę"
+		}
+	},
+	"instrumental": {
+		"m": {
+			"o":"ą"
+		}
+	},
+	"locative": {
+		"m": {
+			"cho":"sze",
+			"szo":"szy",
+			"czo":"czy",
+			"ho":"że",
+			"do":"dzie",
+			"go":"dze",
+			"ko":"ce",
+			"lo":"li",
+			"ło":"le",
+			"ro":"rze",
+			"to":"cie",
+			"żo":"ży",
+			"jo":"i",
+			"io":"ii",
+			"eo":"ei",
+			"o":"ie"
+		}
+	},
+	"vocative" : {
+		"m": {
+			"lo":"lu",
+			"lio":"lio",
+			"io":"iu",
+			"o":"o"
+		}
+	}
+}]

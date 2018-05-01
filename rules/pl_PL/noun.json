@@ -30,20 +30,7 @@
 			"":"y"
 		},
 		"m":{
-			"cja":"cji",
-			"sja":"sji",
-			"zja":"zji",
-			"cia":"ci",
-			"nia":"ni",
-			"sia":"si",
-			"zia":"zi",
-			"ga":"gi",
-			"ka":"ki",
-			"la":"li",
-			"ja":"i",
-			"ia":"ii",
-			"ea":"ei",
-			"a":"y",
+			"#include":"f",
 			"o":"y",
 			"ć":"cia",
 			"ń":"nia",
@@ -106,45 +93,7 @@
 			"":"ie"
 		},
 		"m":{
-			"cja":"cji",
-			"sja":"sji",
-			"zja":"zji",
-			"cia":"ci",
-			"nia":"ni",
-			"sia":"si",
-			"zia":"zi",
-			"cha":"sze",
-			"cho":"sze",
-			"sza":"szy",
-			"szo":"szy",
-			"cza":"czy",
-			"czo":"czy",
-			"ha":"że",
-			"ho":"że",
-			"da":"dzie",
-			"do":"dzie",
-			"ga":"dze",
-			"go":"dze",
-			"ka":"ce",
-			"ko":"ce",
-			"la":"li",
-			"lo":"li",
-			"ła":"le",
-			"ło":"le",
-			"ra":"rze",
-			"ro":"rze",
-			"ta":"cie",
-			"to":"cie",
-			"ża":"ży",
-			"żo":"ży",
-			"ja":"i",
-			"jo":"i",
-			"ia":"ii",
-			"io":"ii",
-			"ea":"ei",
-			"eo":"ei",
-			"a":"ie",
-			"o":"ie",
+			"#include": "f",
 			"ć":"ciowi",
 			"ń":"niowi",
 			"ś":"siowi",
@@ -176,7 +125,6 @@
 		},
 		"m":{
 			"a":"ę",
-			"o":"ę",
 			"ć":"cia",
 			"ń":"nia",
 			"ś":"sia",
@@ -208,7 +156,6 @@
 		},
 		"m":{
 			"a":"ą",
-			"o":"ą",
 			"ć":"ciem",
 			"g":"giem",
 			"k":"kiem",
@@ -271,45 +218,7 @@
 			"":"ie"
 		},
 		"m":{
-			"cja":"cji",
-			"sja":"sji",
-			"zja":"zji",
-			"cia":"ci",
-			"nia":"ni",
-			"sia":"si",
-			"zia":"zi",
-			"cha":"sze",
-			"cho":"sze",
-			"sza":"szy",
-			"szo":"szy",
-			"cza":"czy",
-			"czo":"czy",
-			"ha":"że",
-			"ho":"że",
-			"da":"dzie",
-			"do":"dzie",
-			"ga":"dze",
-			"go":"dze",
-			"ka":"ce",
-			"ko":"ce",
-			"la":"li",
-			"lo":"li",
-			"ła":"le",
-			"ło":"le",
-			"ra":"rze",
-			"ro":"rze",
-			"ta":"cie",
-			"to":"cie",
-			"ża":"ży",
-			"żo":"ży",
-			"ja":"i",
-			"jo":"i",
-			"ia":"ii",
-			"io":"ii",
-			"ea":"ei",
-			"eo":"ei",
-			"a":"ie",
-			"o":"ie",
+			"#include":"f",
 			"c":"cu",
 			"ć":"ciu",
 			"d":"dzie",
@@ -345,14 +254,7 @@
 			"a":"o"
 		},
 		"m":{
-			"la":"lu",
-			"lo":"lu",
-			"lia":"lio",
-			"lio":"lio",
-			"ia":"iu",
-			"io":"iu",
-			"a":"o",
-			"o":"o",
+			"#include":"f",
 			"ć":"ciu",
 			"d":"dzie",
 			"ń":"niu",
@@ -374,73 +276,6 @@
 			"u":"u",
 			"y":"yu",
 			"":"ie"
-		}
-	}
-},{
-	"genitive":{
-		"f":{
-			"ga":"giej",
-			"ka":"kiej",
-			"a":"ej"
-		},
-		"m":{
-			"ky":"kyego",
-			"gy":"gyego",
-			"y":"ego",
-			"i":"iego"
-		}
-	},
-	"dative":{
-		"f":{
-			"ga":"giej",
-			"ka":"kiej",
-			"a":"ej"
-		},
-		"m":{
-			"ky":"kyemu",
-			"gy":"gyemu",
-			"y":"emu",
-			"i":"iemu"
-		}
-	},
-	"accusative":{
-		"f":{
-			"a":"ą"
-		},
-		"m":{
-			"ky":"kyego",
-			"gy":"gyego",
-			"y":"ego",
-			"i":"iego"
-		}
-	},
-	"instrumental":{
-		"f":{
-			"a":"ą"
-		},
-		"m":{
-			"y":"ym",
-			"i":"im"
-		}
-	},
-	"locative":{
-		"f":{
-			"ga":"giej",
-			"ka":"kiej",
-			"a":"ej"
-		},
-		"m":{
-			"y":"ym",
-			"i":"im"
-		}
-	},
-	"vocative":{
-		"f":{
-			"a":"a"
-		},
-		"m":{
-			"i":"i",
-			"y":"y"
 		}
 	}
 }]
