@@ -2,6 +2,11 @@
 	"#include": "adjective"
 },{
 	"#include": "noun",
+	"genitive": {
+		"m": {
+			"o":"y"
+		}
+	},
 	"dative": {
 		"m": {
 			"cho":"sze",

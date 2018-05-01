@@ -1,3 +1,28 @@
 [{
-	"#include": "noun"
+	"#include": "noun",
+	"genitive": {
+		"m": {
+			"o":"ona"
+		}
+	},
+	"dative": {
+		"m": {
+			"o":"onowi"
+		}
+	},
+	"accusative": {
+		"m": {
+			"o":"ona"
+		}
+	},
+	"instrumental": {
+		"m": {
+			"o":"onem"
+		}
+	},
+	"locative": {
+		"m": {
+			"o":"onie"
+		}
+	}
 }]
