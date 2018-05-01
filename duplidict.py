@@ -3,9 +3,13 @@ This file provides an implementation of a dict that allows dynamic duplications
 linked via "#include" special key (DupliDict).
 '''
 
-__all__ = ['DupliDict']
+__all__ = ['DupliDict', 'FSDict']
 
 import collections
+import json
+import os.path
+
+json.__dict__.setdefault('JSONDecodeError', ValueError)
 
 class DupliDict(collections.UserDict):
 	def __init__(self, *a, **kw):
@@ -14,10 +18,11 @@ class DupliDict(collections.UserDict):
 		if '#include' in self:
 			inc = self.pop('#include')
 			while par is not None:
-				if inc in par:
-					self.update.append(par[inc])
+				try:
+					self.update(par[inc])
 					break
-				par = par._par
+				except KeyError:
+					par = par._par
 			else:
 				raise KeyError(inc)
 		for key, val in list(self.items()):
@@ -26,12 +31,12 @@ class DupliDict(collections.UserDict):
 		if isinstance(val, collections.MutableMapping):
 			return DupliDict(val, _par=self)
 		elif isinstance(val, collections.MutableSequence):
-			for i, v in list(eumerate(val)):
+			for i, v in list(enumerate(val)):
 				val[i] = self._fixup(v)
 			return val
 		return val
 
-class FSDict(collections.UserDict):
+class FSDict(DupliDict):
 	def __init__(self, path):
 		self._path = path
 		super().__init__()
@@ -39,9 +44,16 @@ class FSDict(collections.UserDict):
 		try:
 			return super().__getitem__(key)
 		except KeyError:
+			if '.' not in key:
+				key += '.json'
 			try:
 				with open(os.path.join(self._path, key), 'rt') as fp:
-					val = DupliDict(json.load(fp))
+					try:
+						val = json.load(fp)
+					except json.JSONDecodeError:
+						fp.seek(0)
+						val = fp.read()
+					val = self._fixup(val)
 				self[key] = val
 				return val
 			except FileNotFoundError:

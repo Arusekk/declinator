@@ -2,45 +2,72 @@
 
 # wizja: wyrażenie regularne, które tworzy słownik tytułu, imienia, przedrostka, nazwiska, numeru
 # Taki słownik potem odmieniamy zgodnie z plikami w odpowiednim lokalu.
-# Po polsku możnaby zrobić słownik podstawowy i uzupełnienia.
+# Po polsku możnaby zrobić słownik podstawowy i uzupełnienia. [DONE]
 
-import os.path, sys, json
+import duplidict
+
+import collections
+import os.path
+import re
+import sys
 
 locale = 'pl_PL'
 
-with open(os.path.join(os.path.split(__file__)[0],"rules","%s.json"%locale), 'rt') as fp:
-  obj = json.load(fp)
+settings = duplidict.FSDict(os.path.join(os.path.dirname(__file__),"rules",locale))
+
+detector = re.compile(settings['detection.pcre'])
+
+letters = re.compile(r'[^\W\d_]+')
 
 def findgender(word):
   return 'f' if word[-1:] in 'aeis' else 'm'
 
 class DeclensionPatternError(Exception): pass
 
-def decl(name, case, gender = 'auto'):
+def decld(name, case, gender = 'auto'):
   if gender == 'auto':
-    gender = findgender(name[0])
+    gender = findgender(name)
   case = case.get(gender, next(iter(case.values())))
-  name = list(name)
   found = False
-  for idx, word in enumerate(name):
-    rw = word
-    for i in range(len(word),-1,-1):
-      suf = word[i:]
-      if suf in case:
-        rw = word[:i] + case[suf]
-        found = True
-    name[idx] = rw
+  for i in range(len(name),-1,-1):
+    suf = name[i:]
+    if suf in case:
+      name = name[:i] + case[suf]
+      found = True
   if not found:
     raise DeclensionPatternError('case does not decline such a form:\n%s\n%s'%(json.dumps(case, indent='\t'), name))
-  return ' '.join(name)
+  return name
 
-def declmod(word, cases, gender = 'auto'):
-  name = word.split()
+def declmodd(name, cases, gender = 'auto'):
   if gender == 'auto':
-    gender = findgender(name[0])
+    gender = findgender(name)
   #print(json.dumps(cases, indent='\t'))
   cases.setdefault('nominative', {'f':{'':''}})
-  return {x: decl(name, cases[x], gender) for x in cases}
+  return {x: decld(name, cases[x], gender) for x in cases}
+
+def declmod(name, gender='auto'):
+  match = detector.match(name).groupdict()
+  ans = collections.defaultdict(str)
+  for k, v in match.items():
+    if not v:
+      continue
+    ansv = collections.defaultdict(lambda: v)
+    for w in letters.finditer(v):
+      word = w.group()
+      print(word)
+      for met in settings[k]:
+        try:
+          wordd = declmodd(word, met, gender)
+          break
+        except DeclensionPatternError:
+          pass
+      else:
+        raise DeclensionPatternError('Possibilities exhausted: %s'%word)
+      for case, dec in wordd.items():
+        ansv[case] = ansv[case].replace(word, dec)
+    for case, dec in ansv.items():
+      ans[case] += dec
+  return dict(ans)
 
 def test():
   #json.dump(obj, sys.stderr, indent='\t')
