@@ -19,7 +19,7 @@ class DupliDict(collections.UserDict):
 			inc = self.pop('#include')
 			while par is not None:
 				try:
-					self.update(par[inc])
+					_fixx(self, par[inc])
 					break
 				except KeyError:
 					par = par._par
@@ -35,6 +35,14 @@ class DupliDict(collections.UserDict):
 				val[i] = self._fixup(v)
 			return val
 		return val
+
+def _fixx(cont, ins):
+	for k, v in ins.items():
+		if k not in cont:
+			cont[k] = v
+			continue
+		if isinstance(cont[k], collections.MutableMapping):
+			_fixx(cont[k], v)
 
 class FSDict(DupliDict):
 	def __init__(self, path):

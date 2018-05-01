@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 
-# wizja: wyrażenie regularne, które tworzy słownik tytułu, imienia, przedrostka, nazwiska, numeru
-# Taki słownik potem odmieniamy zgodnie z plikami w odpowiednim lokalu.
-# Po polsku możnaby zrobić słownik podstawowy i uzupełnienia. [DONE]
-
 import duplidict
 
 import collections
@@ -28,14 +24,16 @@ def decld(name, case, gender = 'auto'):
   if gender == 'auto':
     gender = findgender(name)
   case = case.get(gender, next(iter(case.values())))
+  print(case)
   found = False
+  suf = ''
   for i in range(len(name),-1,-1):
-    suf = name[i:]
+    suf = name[i:i+1] + suf
     if suf in case:
       name = name[:i] + case[suf]
       found = True
   if not found:
-    raise DeclensionPatternError('case does not decline such a form:\n%s\n%s'%(json.dumps(case, indent='\t'), name))
+    raise DeclensionPatternError('Case does not decline: %s'%(name,))
   return name
 
 def declmodd(name, cases, gender = 'auto'):
@@ -46,15 +44,16 @@ def declmodd(name, cases, gender = 'auto'):
   return {x: decld(name, cases[x], gender) for x in cases}
 
 def declmod(name, gender='auto'):
-  match = detector.match(name).groupdict()
+  match = detector.match(name)
   ans = collections.defaultdict(str)
-  for k, v in match.items():
+  for k, v in sorted(
+      match.groupdict(default='').items(),
+      key=lambda x: match.groups().index(x[1])):
     if not v:
       continue
     ansv = collections.defaultdict(lambda: v)
     for w in letters.finditer(v):
       word = w.group()
-      print(word)
       for met in settings[k]:
         try:
           wordd = declmodd(word, met, gender)
@@ -63,6 +62,7 @@ def declmod(name, gender='auto'):
           pass
       else:
         raise DeclensionPatternError('Possibilities exhausted: %s'%word)
+      print(word, ':', wordd)
       for case, dec in wordd.items():
         ansv[case] = ansv[case].replace(word, dec)
     for case, dec in ansv.items():
@@ -74,17 +74,13 @@ def test():
   import argparse
   par = argparse.ArgumentParser()
   par.add_argument("-g", "--gender", help="the word's gender", choices=['f','m','n','auto'], default='auto')
-  par.add_argument("word", help="the word to roll", default='Julia')
+  par.add_argument("word", help="the word to roll", default='Julia Kwiatkowska')
   arg = par.parse_args()
-  for speechpart in obj:
-    try:
-      m = declmod(arg.word, speechpart, arg.gender)
-    except DeclensionPatternError:
-      continue
-    print("\n=== speechpart! ===")
-    print("Idę sobie z %(instrumental)s, przyglądam się %(dative)s, pytam"
-          " %(accusative)s, a %(nominative)s odpowiada. %(vocative)s! Odpowiedź"
-          " %(genitive)s jest o %(locative)s." % declmod(arg.word, speechpart, arg.gender))
+  m = declmod(arg.word, arg.gender)
+  print("\n=== speechpart! ===")
+  print("Idę sobie z %(instrumental)s, przyglądam się %(dative)s, pytam"
+        " %(accusative)s, a %(nominative)s odpowiada. %(vocative)s! Odpowiedź"
+        " %(genitive)s jest o %(locative)s." % m)
 
 if __name__ == "__main__":
   test()
