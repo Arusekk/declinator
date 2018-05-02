@@ -52,12 +52,12 @@ class FSDict(DupliDict):
 		try:
 			return super().__getitem__(key)
 		except KeyError:
-			if '.' not in key:
-				key += '.json'
 			try:
 				newfn = os.path.join(self._path, key)
 				if os.path.isdir(newfn):
 					return FSDict(newfn)
+				if '.' not in key:
+					newfn += '.json'
 				with open(newfn, 'rt') as fp:
 					try:
 						val = json.load(fp)

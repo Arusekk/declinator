@@ -1,0 +1,21 @@
+{
+	"genitive": {
+		"f": {"":""},
+		"m": {"":""}
+	},
+	"dative": {
+		"#include": "genitive"
+	},
+	"accusative": {
+		"#include": "genitive"
+	},
+	"instrumental": {
+		"#include": "genitive"
+	},
+	"locative": {
+		"#include": "genitive"
+	},
+	"vocative": {
+		"#include": "genitive"
+	}
+}

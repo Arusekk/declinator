@@ -8,11 +8,13 @@ import os.path
 import re
 import sys
 
-locale, _ = locale.getlocale()
-settings_all = os.path.join(os.path.dirname(__file__),"rules")
-settings = settings_all[locale]
+default_locale, _ = locale.getlocale()
+settings_all = duplidict.FSDict(os.path.join(os.path.dirname(__file__),"rules"))
+settings = settings_all[default_locale]
 
-detector = re.compile(settings['detection.pcre'])
+DETECTOR_NAME = 'detection.pcre'
+
+detector = re.compile(settings[DETECTOR_NAME])
 
 letters = re.compile(r'[^\W\d_]+')
 
@@ -67,7 +69,7 @@ def _declmodd(name, cases, gender):
   cases.setdefault('nominative', {'f':{'':''}})
   return {x: _decld(name, cases[x], gender) for x in cases}
 
-def declmod(name, gender='auto', locale=locale):
+def declmod(name, gender='auto', locale=default_locale):
   r'''
       Declension of a name.
 
@@ -84,7 +86,7 @@ def declmod(name, gender='auto', locale=locale):
       ... 'vocative': 'Różo Mario Barbaro Gräfin von Thun und Hohenstein'}
       True
 
-      >>> declmod('Janusz Korwin-Mikke') == \
+      >>> declmod('Janusz Korwin-Mikke', locale='pl_PL') == \
       ... {'nominative': 'Janusz Korwin-Mikke', 'genitive':
       ... 'Janusza Korwina-Mikkego', 'dative': 'Januszowi Korwinowi-Mikkemu',
       ... 'accusative': 'Janusza Korwina-Mikkego', 'instrumental':
@@ -92,7 +94,7 @@ def declmod(name, gender='auto', locale=locale):
       ... 'vocative': 'Januszu Korwinie-Mikke'}
       True
 
-      >>> declmod('Iwo Kwiatkowski-Misiek') == \
+      >>> declmod('Iwo Kwiatkowski-Misiek', locale='pl_PL') == \
       ... {'nominative': 'Iwo Kwiatkowski-Misiek', 'genitive':
       ... 'Iwona Kwiatkowskiego-Miśka', 'dative':
       ... 'Iwonowi Kwiatkowskiemu-Miśkowi', 'accusative':
@@ -101,7 +103,12 @@ def declmod(name, gender='auto', locale=locale):
       ... 'Iwonie Kwiatkowskim-Miśku', 'vocative': 'Iwonie Kwiatkowski-Miśku'}
       True
   '''
-  match = detector.match(name)
+  settings_ = settings
+  detector_ = detector
+  if locale != default_locale:
+    settings_ = settings_all[locale]
+    detector_ = settings_[DETECTOR_NAME]
+  match = detector_.match(name)
   ans = collections.defaultdict(str)
   if gender == 'auto':
     gender = findgender(next(letters.finditer(match.group('first'))).group())
@@ -113,9 +120,10 @@ def declmod(name, gender='auto', locale=locale):
     ansv = collections.defaultdict(lambda: v)
     for w in letters.finditer(v):
       word = w.group()
-      defs = settings[k][0]
+      sets = iter(settings_[k])
+      defs = next(sets)
       wordds = []
-      for met in settings[k][1:]:
+      for met in sets:
         try:
           wordds.append(_declmodd(word, met, gender))
         except DeclensionPatternError:
