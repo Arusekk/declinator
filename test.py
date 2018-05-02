@@ -2,7 +2,7 @@
 
 import doctest, declinator
 
-doctest.testmod(declinator, verbose=True)
+doctest.testmod(declinator)
 
 def gendoctest(name):
     print('{' + ', '.join('%r: %r' % t

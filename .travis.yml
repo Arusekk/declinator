@@ -2,4 +2,5 @@ language: python
 python:
   - "3.6"
 script:
-  - ./test.py
+  - ./test.py |tee testout
+  - wc -c testout |grep -q '^0$'
