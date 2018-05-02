@@ -55,7 +55,10 @@ class FSDict(DupliDict):
 			if '.' not in key:
 				key += '.json'
 			try:
-				with open(os.path.join(self._path, key), 'rt') as fp:
+				newfn = os.path.join(self._path, key)
+				if os.path.isdir(newfn):
+					return FSDict(newfn)
+				with open(newfn, 'rt') as fp:
 					try:
 						val = json.load(fp)
 					except json.JSONDecodeError as e:

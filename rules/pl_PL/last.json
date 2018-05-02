@@ -19,6 +19,19 @@
 	"#include": "noun",
 	"genitive": {
 		"m": {
+			"cjo":"cji",
+			"sjo":"sji",
+			"zjo":"zji",
+			"cio":"ci",
+			"nio":"ni",
+			"sio":"si",
+			"zio":"zi",
+			"go":"gi",
+			"ko":"ki",
+			"lo":"li",
+			"jo":"i",
+			"io":"ii",
+			"eo":"ei",
 			"o":"y"
 		}
 	},

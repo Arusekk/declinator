@@ -1,12 +1,12 @@
-(?imux)
+(?mux)
 ^
 
 (?P<title>
 	(?:
 		(?:
-			mrs?|miss|pani?|mgr|dr
+			[Mm](?:rs?|iss)|[Pp]ani?|[Mm]gr|[Dd]r
 			|(?:
-				x|ks|prof|inż|hab|św
+				[Xx]|[Kk]s|[Pp]rof|[Ii]nż|[Hh]ab|[Śś]w
 			)\.?
 		)
 	\s)*
@@ -31,7 +31,7 @@
 		(?:
 			(?:
 				\s?[-—]\s?
-				|\s[au]nd\s
+				|\s[AUau]nd\s
 			)
 			[^\W\d_]+
 		)*
@@ -41,8 +41,8 @@
 (?P<suffix>
 	(?:\s
 		(?:
-			m{,3}c?[dm]?c{,3}x?[lc]?x{,3}i?v?i{,3}
-			|[js]r
+			M{,3}C?[DM]?C{,3}X?[LC]?X{,3}I?V?I{,3}
+			|[JSjs]r
 		)
 	)?
 )
