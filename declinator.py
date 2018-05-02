@@ -106,7 +106,7 @@ def declmod(name, gender='auto', locale=default_locale):
   detector_ = detector
   if locale != default_locale:
     settings_ = settings_all[locale]
-    detector_ = settings_[DETECTOR_NAME]
+    detector_ = re.compile(settings_[DETECTOR_NAME])
   match = detector_.match(name)
   ans = collections.defaultdict(str)
   if gender == 'auto':
