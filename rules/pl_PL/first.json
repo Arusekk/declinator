@@ -1,4 +1,7 @@
-[{
+[{"f":{"":0}},
+{
+	"#include": "noun_eshift"
+},{
 	"#include": "noun",
 	"genitive": {
 		"m": {
@@ -21,6 +24,11 @@
 		}
 	},
 	"locative": {
+		"m": {
+			"o":"onie"
+		}
+	},
+	"vocative": {
 		"m": {
 			"o":"onie"
 		}

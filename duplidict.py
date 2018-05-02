@@ -58,7 +58,8 @@ class FSDict(DupliDict):
 				with open(os.path.join(self._path, key), 'rt') as fp:
 					try:
 						val = json.load(fp)
-					except json.JSONDecodeError:
+					except json.JSONDecodeError as e:
+						print(key, ':', e)
 						fp.seek(0)
 						val = fp.read()
 					val = self._fixup(val)

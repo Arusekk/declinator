@@ -1,3 +1,40 @@
-[{
-	"#include": "short"
+[{"f":{"":0}},
+{
+	"#include": "short",
+	"genitive": {
+		"m": {
+			"n": "na"
+		}
+	},
+	"dative": {
+		"m": {
+			"n": "nu"
+		}
+	},
+	"accusative": {
+		"f": {
+			"i": "ią"
+		},
+		"m": {
+			"n": "na"
+		}
+	},
+	"instrumental": {
+		"f": {
+			"i": "ią"
+		},
+		"m": {
+			"n": "nem"
+		}
+	},
+	"locative": {
+		"m": {
+			"n": "nu"
+		}
+	},
+	"vocative": {
+		"m": {
+			"n": "nie"
+		}
+	}
 }]

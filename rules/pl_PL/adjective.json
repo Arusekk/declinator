@@ -9,7 +9,8 @@
 			"ky":"kyego",
 			"gy":"gyego",
 			"y":"ego",
-			"i":"iego"
+			"i":"iego",
+			"e":"ego"
 		}
 	},
 	"dative":{
@@ -22,7 +23,8 @@
 			"ky":"kyemu",
 			"gy":"gyemu",
 			"y":"emu",
-			"i":"iemu"
+			"i":"iemu",
+			"e":"emu"
 		}
 	},
 	"accusative":{
@@ -33,7 +35,8 @@
 			"ky":"kyego",
 			"gy":"gyego",
 			"y":"ego",
-			"i":"iego"
+			"i":"iego",
+			"e":"ego"
 		}
 	},
 	"instrumental":{
@@ -42,7 +45,8 @@
 		},
 		"m":{
 			"y":"ym",
-			"i":"im"
+			"i":"im",
+			"e":"em"
 		}
 	},
 	"locative":{
@@ -53,7 +57,8 @@
 		},
 		"m":{
 			"y":"ym",
-			"i":"im"
+			"i":"im",
+			"e":"em"
 		}
 	},
 	"vocative":{
@@ -62,7 +67,8 @@
 		},
 		"m":{
 			"y":"y",
-			"i":"i"
+			"i":"i",
+			"e":"e"
 		}
 	}
 }

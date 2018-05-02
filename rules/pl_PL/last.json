@@ -1,4 +1,19 @@
 [{
+	"f":{
+		"aska": 1,
+		"ska": 0,
+		"owa": 0,
+		"na": 1,
+		"a": 1,
+		"": 0
+	},
+	"m":{
+		"ey": 1,
+		"ek": 1,
+		"": 0
+	}
+},
+{
 	"#include": "adjective"
 },{
 	"#include": "noun",
@@ -65,4 +80,6 @@
 			"o":"o"
 		}
 	}
+},{
+	"#include": "noun_eshift"
 }]

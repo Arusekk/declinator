@@ -20,32 +20,37 @@ def findgender(word):
 
 class DeclensionPatternError(Exception): pass
 
-def decld(name, case, gender = 'auto'):
+def getsuf(word, dic, gender):
   if gender == 'auto':
-    gender = findgender(name)
-  case = case.get(gender, next(iter(case.values())))
-  print(case)
-  found = False
-  suf = ''
-  for i in range(len(name),-1,-1):
-    suf = name[i:i+1] + suf
-    if suf in case:
-      name = name[:i] + case[suf]
-      found = True
-  if not found:
-    raise DeclensionPatternError('Case does not decline: %s'%(name,))
-  return name
+    gender = findgender(word)
+  dic = dic.get(gender, next(iter(dic.values())))
+  #print(dic)
+  ans = None
+  for i in range(len(word),-1,-1):
+    suf = word[i:]
+    if suf in dic:
+      ans = dic[suf]
+      l = i
+  if ans is None:
+    raise DeclensionPatternError('Case does not decline: %s'%(word,))
+  return ans,l
+
+def decld(name, case, gender = 'auto'):
+  newsuf, i = getsuf(name, case, gender)
+  #print(name, '->', name[:i] + newsuf)
+  return name[:i] + newsuf
 
 def declmodd(name, cases, gender = 'auto'):
   if gender == 'auto':
     gender = findgender(name)
-  #print(json.dumps(cases, indent='\t'))
   cases.setdefault('nominative', {'f':{'':''}})
   return {x: decld(name, cases[x], gender) for x in cases}
 
 def declmod(name, gender='auto'):
   match = detector.match(name)
   ans = collections.defaultdict(str)
+  if gender == 'auto':
+    gender = findgender(next(letters.finditer(match.group('first'))).group())
   for k, v in sorted(
       match.groupdict(default='').items(),
       key=lambda x: match.groups().index(x[1])):
@@ -54,15 +59,17 @@ def declmod(name, gender='auto'):
     ansv = collections.defaultdict(lambda: v)
     for w in letters.finditer(v):
       word = w.group()
-      for met in settings[k]:
+      defs = settings[k][0]
+      wordds = []
+      for met in settings[k][1:]:
         try:
-          wordd = declmodd(word, met, gender)
-          break
+          wordds.append(declmodd(word, met, gender))
         except DeclensionPatternError:
           pass
-      else:
+      if not wordds:
         raise DeclensionPatternError('Possibilities exhausted: %s'%word)
-      print(word, ':', wordd)
+      #print(word, ':', wordds)
+      wordd = wordds[getsuf(word, defs, gender)[0]] ## maybe return whole list?
       for case, dec in wordd.items():
         ansv[case] = ansv[case].replace(word, dec)
     for case, dec in ansv.items():
