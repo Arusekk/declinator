@@ -3,4 +3,4 @@ python:
   - "3.6"
 script:
   - ./test.py |tee testout
-  - wc -l testout |grep '^[0-3]$'
+  - wc -c < testout |grep '^0$'
