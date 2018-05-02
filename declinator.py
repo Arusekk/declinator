@@ -6,7 +6,6 @@ import collections
 import locale
 import os.path
 import re
-import sys
 
 default_locale, _ = locale.getlocale()
 settings_all = duplidict.FSDict(os.path.join(os.path.dirname(__file__),"rules"))
