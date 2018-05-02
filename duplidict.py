@@ -8,8 +8,7 @@ __all__ = ['DupliDict', 'FSDict']
 import collections
 import json
 import os.path
-
-json.__dict__.setdefault('JSONDecodeError', ValueError)
+import re
 
 class DupliDict(collections.UserDict):
 	def __init__(self, *a, **kw):
@@ -59,13 +58,10 @@ class FSDict(DupliDict):
 				if '.' not in key:
 					newfn += '.json'
 				with open(newfn, 'rt') as fp:
-					try:
-						val = json.load(fp)
-					except json.JSONDecodeError as e:
-						print(key, ':', e)
-						fp.seek(0)
-						val = fp.read()
-					val = self._fixup(val)
+					if newfn.endswith('.json'):
+						val = self._fixup(json.load(fp))
+					elif newfn.endswith('.pcre'):
+						val = re.compile(fp.read())
 				self[key] = val
 				return val
 			except FileNotFoundError:
