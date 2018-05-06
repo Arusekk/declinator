@@ -1,10 +1,10 @@
-(?mux)
+(*UTF)(?mx)
 ^
 
 (?P<title>
 	(?:
 		(?:
-			[Mm](?:rs?|iss)|[Pp]ani?|[Mm]gr|[Dd]r
+			[Mm](?:rs?|iss|gr)|[Pp]ani?|[Dd]r
 			|(?:
 				[Xx]|[Kk]s|[Pp]rof|[Ii]nż|[Hh]ab|[Śś]w
 			)\.?

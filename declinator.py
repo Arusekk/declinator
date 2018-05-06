@@ -117,10 +117,11 @@ def declmod(name, gender='auto', locale=default_locale):
     if not v:
       continue
     ansv = collections.defaultdict(lambda: v)
+    sets = iter(settings_[k])
+    defs = next(sets)
+    sets = list(sets)
     for w in letters.finditer(v):
       word = w.group()
-      sets = iter(settings_[k])
-      defs = next(sets)
       wordds = []
       for met in sets:
         try:

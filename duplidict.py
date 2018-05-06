@@ -61,7 +61,7 @@ class FSDict(DupliDict):
 					if newfn.endswith('.json'):
 						val = self._fixup(json.load(fp))
 					elif newfn.endswith('.pcre'):
-						val = re.compile(fp.read())
+						val = re.compile(fp.read().replace('(*UTF)','(?u)'))
 				self[key] = val
 				return val
 			except FileNotFoundError:
