@@ -18,18 +18,7 @@ struct parpar {
 	const struct parpar *par;
 };
 
-void duplidict_fixx(struct json_object *dest, struct json_object *src) {
-	json_object_object_foreach (src, key, val) {
-		json_object *targ;
-		if (!json_object_object_get_ex(dest, key, &targ)) {
-			json_object_object_add(dest, key, json_object_get(val));
-			continue;
-		}
-		if (json_object_is_type(targ, json_type_object))
-			duplidict_fixx(targ, val);
-	}
-}
-
+static void duplidict_fixx(struct json_object *dest, struct json_object *src);
 static void duplidict_fixup(struct json_object *obj, const struct parpar *par);
 
 void duplidict_object_init(struct json_object *obj, const struct parpar *par) {
@@ -49,7 +38,7 @@ void duplidict_object_init(struct json_object *obj, const struct parpar *par) {
 			par = par -> par;
 		}
 		if (!par)
-			fprintf(stderr, "#inclusion failed: %#x[%s]", obj, key);
+			fprintf(stderr, "#inclusion failed: %p[%s]", obj, key);
 
 		json_object_put(included);
 	}
@@ -57,9 +46,12 @@ void duplidict_object_init(struct json_object *obj, const struct parpar *par) {
 		.j = obj,
 		.par = par
 	};
-	json_object_object_foreach (obj, key, val)
+	json_object_object_foreach (obj, key, val) {
+		(void)key;
 		duplidict_fixup(val, &par2);
+	}
 }
+
 
 void duplidict_fixup(struct json_object *obj, const struct parpar *par) {
 	switch (json_object_get_type(obj)) {
@@ -72,9 +64,24 @@ void duplidict_fixup(struct json_object *obj, const struct parpar *par) {
 				for (int i=0; i<len; i++)
 					duplidict_fixup(json_object_array_get_idx(obj, i), par);
 			}
+		default:
 			break;
 	}
 }
+
+
+void duplidict_fixx(struct json_object *dest, struct json_object *src) {
+	json_object_object_foreach (src, key, val) {
+		json_object *targ;
+		if (!json_object_object_get_ex(dest, key, &targ)) {
+			json_object_object_add(dest, key, json_object_get(val));
+			continue;
+		}
+				if (json_object_is_type(targ, json_type_object))
+					duplidict_fixx(targ, val);
+	}
+}
+
 
 json_object *fsdict_object_new(const char *path) {
 	json_object *ret = json_object_new_object();
@@ -83,11 +90,11 @@ json_object *fsdict_object_new(const char *path) {
 	                        | JSON_C_OBJECT_KEY_IS_CONSTANT);
 	return ret;
 }
+
+
 json_object *json_object_from_fp(FILE *fp) {
-#if 1
 		char buffer[4096];
 		json_object *jobj = NULL;
-		const char *mystring = NULL;
 		int stringlen = 0;
 		enum json_tokener_error jerr;
 		struct json_tokener *tok = json_tokener_new();
@@ -105,17 +112,15 @@ json_object *json_object_from_fp(FILE *fp) {
 		}
 		json_tokener_free(tok);
 		return jobj;
-#else
-		return json_object_from_fd(fileno(fp));
-#endif
 }
+
 
 json_object *pcre_compile_fp(FILE *fp) {
 	struct stat st;
 	fstat(fileno(fp), &st);
 	char *pattern = malloc(st.st_size);
 	assert(pattern != NULL);
-	assert(fread(pattern, 1, st.st_size, fp) == st.st_size);
+	assert(fread(pattern, 1, st.st_size, fp) == (unsigned)st.st_size);
 
 	const char *err;
 	int erroffset;
@@ -140,6 +145,7 @@ json_object *pcre_compile_fp(FILE *fp) {
 	pcre_free(re);
 	return obj;
 }
+
 
 json_bool fsdict_object_get_ex(struct json_object *obj, const char *key, json_object **value) {
 	if (json_object_object_get_ex(obj, key, value))
