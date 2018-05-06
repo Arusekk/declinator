@@ -1,4 +1,4 @@
-(*UTF)(?mx)
+(*UTF8)(?mx)
 ^
 
 (?P<title>

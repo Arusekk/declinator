@@ -8,7 +8,7 @@
 #define arrlen(x) (sizeof(x)/sizeof(*x))
 
 static json_object *settings_all, *settings, *detector, *default_nominative;
-static const char *default_locale, *letters_patt="(*UTF)[^\\W\\d]+";
+static const char *default_locale, *letters_patt="(*UTF8)[^\\W\\d]+";
 static pcre *letters;
 
 
