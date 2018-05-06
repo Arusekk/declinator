@@ -2,5 +2,7 @@ language: python
 python:
   - "3.6"
 script:
+  - make
+  - ./declinator 'Jean Babtista Lariron'
   - ./test.py |tee testout
   - wc -c < testout |grep '^0$'
