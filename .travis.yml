@@ -1,10 +1,11 @@
+dist: bionic
 language: python
 python:
   - "3.6"
 addons:
   apt:
     packages:
-      - libjson0-dev
+      - libjson-c-dev
       - libpcre3-dev
 script:
   - make
