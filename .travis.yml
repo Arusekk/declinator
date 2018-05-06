@@ -2,11 +2,10 @@ dist: bionic
 language: python
 python:
   - "3.6"
-addons:
-  apt:
-    packages:
-      - libjson-c-dev
-      - libpcre3-dev
+install:
+  - export DEBIAN_FRONTEND=noninteractive
+  - sudo -E apt-get -yq update &>> ~/apt-get-update.log
+  - sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install libpcre3-dev libjson-c-dev
 script:
   - make
   - LD_LIBRARY_PATH=. LC_ALL=pl_PL.UTF-8 ./declinator 'Jean Babtista Lariron-Święciszewicki'
