@@ -10,6 +10,7 @@ OBJECTS-EXEC = main.o
 LIBRARY = libdeclinator.so
 LIBRARY-STATIC = libdeclinator.a
 EXEC = declinator
+CFLAGS ?= -Wall -Wextra -std=c99
 
 CFLAGS-LIBRARY := $(CFLAGS) $(shell pkg-config --cflags $(PKGS-LIBRARY)) -fPIC -g
 LDFLAGS-LIBRARY := $(LDFLAGS) $(shell pkg-config --libs $(PKGS-LIBRARY))
