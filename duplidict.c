@@ -39,7 +39,7 @@ void duplidict_object_init(struct json_object *obj, const struct parpar *par) {
 			par = par -> par;
 		}
 		if (!par)
-			fprintf(stderr, "#inclusion failed: %p[%s]", obj, key);
+			fprintf(stderr, "#inclusion failed: %p[%s]\n", obj, key);
 
 		json_object_put(included);
 	}
@@ -179,7 +179,7 @@ json_bool fsdict_object_get_ex(struct json_object *obj, const char *key, json_ob
 
 		FILE *fp = fopen(newpath, "r");
 		if (!fp) {
-			fprintf(stderr, "Key error: %s: %m: %s", key, newpath);
+			fprintf(stderr, "Key error: %s: %m: %s\n", key, newpath);
 			return FALSE;
 		}
 
@@ -203,7 +203,7 @@ json_bool fsdict_object_get_ex(struct json_object *obj, const char *key, json_ob
 		}
 		else {
 			fclose(fp);
-			fprintf(stderr, "Key error: %s: unknown file extension: %s", key, ext);
+			fprintf(stderr, "Key error: %s: unknown file extension: %s\n", key, ext);
 			return FALSE;
 		}
 	}

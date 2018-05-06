@@ -25,6 +25,10 @@ static enum gender findgender(const char *name);
 void declinator_init() {
 	settings_all = fsdict_object_new("rules");
 	default_locale = setlocale(LC_ALL, "");
+	if (!default_locale)
+		default_locale = getenv("LC_ALL");
+	if (!default_locale)
+		default_locale = "en_US.UTF-8";
 	assert(fsdict_object_get_ex(settings_all, default_locale, &settings));
 	assert(fsdict_object_get_ex(settings, "detection.pcre", &detector));
 	default_nominative = json_tokener_parse("{\"f\":{\"\":\"\"}}");
