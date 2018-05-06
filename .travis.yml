@@ -8,6 +8,6 @@ addons:
       - libpcre3-dev
 script:
   - make
-  - ./declinator 'Jean Babtista Lariron'
+  - LD_LIBRARY_PATH=. ./declinator 'Jean Babtista Lariron'
   - ./test.py |tee testout
   - wc -c < testout |grep '^0$'

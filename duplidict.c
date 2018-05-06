@@ -21,6 +21,7 @@ struct parpar {
 static void duplidict_fixx(struct json_object *dest, struct json_object *src);
 static void duplidict_fixup(struct json_object *obj, const struct parpar *par);
 
+
 void duplidict_object_init(struct json_object *obj, const struct parpar *par) {
 	json_object *included;
 	if (json_object_object_get_ex(obj, "#include", &included)) {
@@ -95,11 +96,10 @@ json_object *fsdict_object_new(const char *path) {
 json_object *json_object_from_fp(FILE *fp) {
 		char buffer[4096];
 		json_object *jobj = NULL;
-		int stringlen = 0;
 		enum json_tokener_error jerr;
 		struct json_tokener *tok = json_tokener_new();
 		do {
-			stringlen = fread(buffer, 1, 4096, fp);
+			int stringlen = fread(buffer, 1, 4096, fp);
 			if (!stringlen)
 				break;
 			jobj = json_tokener_parse_ex(tok, buffer, stringlen);
@@ -130,12 +130,14 @@ json_object *pcre_compile_fp(FILE *fp) {
 		&err,
 		&erroffset,
 		NULL);                /* use default character tables */
-	free(pattern);
 
 	if (!re) {
 		fprintf(stderr, "PCRE compilation failed at offset %d: %s\n", erroffset, err);
-		return json_object_new_string_len(pattern, st.st_size);
+		json_object *pat = json_object_new_string_len(pattern, st.st_size);
+		free(pattern);
+		return pat;
 	}
+	free(pattern);
 
 	/* HACK
 	 * should be sizeof(*re), but since it's an incomplete type,
@@ -182,6 +184,7 @@ json_bool fsdict_object_get_ex(struct json_object *obj, const char *key, json_ob
 		++ext;
 		if (strcmp(ext, "json") == 0) {
 			*value = json_object_from_fp(fp);
+			fclose(fp);
 			if (*value == (json_object*)-1)
 				return FALSE;
 			struct parpar par2 = {
@@ -192,11 +195,14 @@ json_bool fsdict_object_get_ex(struct json_object *obj, const char *key, json_ob
 		}
 		else if (strcmp(ext, "pcre") == 0) {
 			*value = pcre_compile_fp(fp);
+			fclose(fp);
 			if (!*value)
 				return FALSE;
 		}
-		else
+		else {
+			fclose(fp);
 			return FALSE;
+		}
 	}
 	json_object_object_add(obj, key, *value);
 	return TRUE;
