@@ -1,4 +1,4 @@
-(?mux)
+(*UTF)(?mx)
 ^
 
 (?P<name>

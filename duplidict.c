@@ -178,8 +178,10 @@ json_bool fsdict_object_get_ex(struct json_object *obj, const char *key, json_ob
 		}
 
 		FILE *fp = fopen(newpath, "r");
-		if (!fp)
+		if (!fp) {
+			fprintf(stderr, "Key error: %s: %m: %s", key, newpath);
 			return FALSE;
+		}
 
 		++ext;
 		if (strcmp(ext, "json") == 0) {
@@ -201,6 +203,7 @@ json_bool fsdict_object_get_ex(struct json_object *obj, const char *key, json_ob
 		}
 		else {
 			fclose(fp);
+			fprintf(stderr, "Key error: %s: unknown file extension: %s", key, ext);
 			return FALSE;
 		}
 	}
