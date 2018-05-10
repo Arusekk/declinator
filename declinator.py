@@ -1,4 +1,25 @@
 #!/usr/bin/env python3
+'''
+    Automatised declension of names.
+    Use declmod to compute all possible cases and decl to get just
+    a single case.
+'''
+# declinator.py
+# Copyright (C) 2018 Arusekk
+# This file is part of Declinator.
+#
+# Declinator is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Declinator is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Declinator.  If not, see <http://www.gnu.org/licenses/>.
 
 import duplidict
 
@@ -142,7 +163,7 @@ def main():
   import argparse
   par = argparse.ArgumentParser()
   par.add_argument("-g", "--gender", help="the word's gender", choices=['f','m','n','auto'], default='auto')
-  par.add_argument("word", help="the word to roll", default='Julia Kwiatkowska')
+  par.add_argument("word", help="the word to roll", default='Mark Twain')
   arg = par.parse_args()
   m = declmod(arg.word, arg.gender)
   print(settings['illustration']['teststring'].format(**m))
