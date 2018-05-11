@@ -19,7 +19,7 @@
 
 function DupliDict(obj, par) {
 	this._fixup = function(val) {
-		if (val.length !== undefined) {
+		if (typeof val.length !== "undefined") {
 			for (var i = 0; i < val.length; i ++) {
 				val[i] = this._fixup(val[i]);
 			}
@@ -54,8 +54,8 @@ function DupliDict(obj, par) {
 	}
 	this._par = par;
 
-	if (inc !== undefined) {
-		while (par !== undefined) {
+	if (typeof inc !== "undefined") {
+		while (typeof par !== "undefined") {
 			if (inc in par) {
 				this._fixx(this, par[inc]);
 				break;
@@ -74,7 +74,7 @@ var FS = {
 		FS.getFile(path+"/", cb1, cb2);
 	},
 	getFile: function(path, cb1, cb2, pot) {
-		if (pot !== undefined) {
+		if (typeof pot !== "undefined") {
 			return cb1(pot);
 		}
 		var xhr = new XMLHttpRequest();
@@ -94,7 +94,7 @@ var FS = {
 };
 
 function regExpEscape(literal_string) {
-	return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, '\\$&');
+	return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
 }
 
 function FSDict(path, suf, text) {
@@ -150,8 +150,8 @@ function Declinator(URL1, URL2) {
 	this.settings = this.settingsAll[this.defaultLocale];
 	this.detector = this.settings[this.DETECTOR_NAME];
 
-	this.declmod = function(name, locale) {
-		if (locale === undefined) {
+	this.declmod = function(name, gen, locale) {
+		if (typeof locale === "undefined") {
 			locale = this.defaultLocale;
 		}
 		var settings_ = this.settings;
@@ -160,15 +160,52 @@ function Declinator(URL1, URL2) {
 			settings_ = this.settingsAll[locale];
 			detector_ = settings_[this.DETECTOR_NAME];
 		}
-		match = detector_.exec(name);
-		
+		var match = detector_.exec(name);
+		var ans = {};
+		if (gen === "auto") {
+			gen = this.findGender(letters.exec(match[detector_.namedGroups["first"]])[0]);
+		}
+		for (var key in detector_.namedGroups) {
+			var val = match[detector_.namedGroups[key]];
+			if (!val) {
+				continue;
+			}
+			var ansv = {};
+			var sets = settings_[key];
+			var defs = sets[0];
+			var w;
+			while (w = letters.exec(val)) {
+				var word = w[0];
+				var wordds = [];
+				for (var i = 1; i < sets.length; i ++) {
+					var x = this._declmodd(word, sets[i], gen);
+					if (x) {
+						wordds.push(x);
+					}
+				}
+				if (wordds.length === 0)
+					return; // TODO: throw
+				wordd = wordds[this._getSuf(word, defs, gen)[0]]; // ### maybe?
+				for (var cas in wordd) {
+					if (typeof ansv[cas] === "undefined")
+						ansv[cas] = val;
+					ansv[cas] = ansv[cas].replace(word, wordd[cas]);
+				}
+			}
+			for (var ca in ansv) {
+				if (typeof ans[ca] === "undefined")
+					ans[ca] = "";
+				ans[ca] += ansv[ca];
+			}
+		}
+		return ans;
 	}
 
 	this._declmodd = function(word, dic, gen) {
 		var ret = {};
 		for (var k in dic) {
 			var v = this._decld(word, dic[k], gen);
-			if (v === undefined) {
+			if (typeof v === "undefined") {
 				return;
 			}
 			ret[k] = v;
@@ -188,16 +225,16 @@ function Declinator(URL1, URL2) {
 			gen = this.findGender(word);
 		}
 		var dic = dic0[gen];
-		if (dic === undefined) {
+		if (typeof dic === "undefined") {
 			for (var k in dic0) {
 				dic = dic0[k];
 				break;
 			}
 		}
 		for (var i=0; i<word.length; i++) {
-			var k = word.slice(i);
-			if (dic[k] !== undefined) {
-				return [dic[k], i];
+			var t = word.slice(i);
+			if (typeof dic[t] !== "undefined") {
+				return [dic[t], i];
 			}
 		}
 		return ["", -1];
