@@ -245,6 +245,23 @@ function Declinator(URL1, URL2) {
 		}
 	};
 
+	this.getIllustration = function(locale) {
+		if (typeof locale === "undefined") {
+			locale = this.getDefaultLocale();
+		}
+		var settings_ = this.settingsAll[locale];
+		return settings_.illustration;
+	};
+
+	this.format = function(fmt, mod) {
+		for (var k in mod) {
+			if (k.slice(0,1) !== "_") {
+				fmt = fmt.replace("{"+k+"}", mod[k]);
+			}
+		}
+		return fmt;
+	};
+
 	this.declmod = function(name, gen, locale) {
 		if (typeof locale === "undefined") {
 			locale = this.getDefaultLocale();
