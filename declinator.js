@@ -19,15 +19,17 @@
 
 function DupliDict(obj, par) {
 	this._fixup = function(val) {
-		if (typeof val === "object")
-			return new DupliDict(val, this);
-		else if (typeof val === "list") {
-			for (var i = 0; i < val.length; i ++)
+		if (val.length !== undefined) {
+			for (var i = 0; i < val.length; i ++) {
 				val[i] = this._fixup(val[i]);
+			}
 			return val;
 		}
+		else if (typeof val === "object") {
+			return new DupliDict(val, this);
+		}
 		return val;
-	}
+	};
 
 	this._fixx = function(cont, ins) {
 		for (var k in ins) {
@@ -35,17 +37,20 @@ function DupliDict(obj, par) {
 				cont[k] = ins[k];
 				continue;
 			}
-			if (typeof cont[k] === "object")
+			if (typeof cont[k] === "object") {
 				this._fixx(cont[k], ins[k]);
+			}
 		}
-	}
+	};
 
-	var inc;
-	for (var k in obj) {
-		if (k === "#include")
+	var inc, k;
+	for (k in obj) {
+		if (k === "#include") {
 			inc = obj[k];
-		else
+		}
+		else {
 			this[k] = obj[k];
+		}
 	}
 	this._par = par;
 
@@ -59,24 +64,28 @@ function DupliDict(obj, par) {
 		}
 	}
 
-	for (var k in this)
+	for (k in this) {
 		this[k] = this._fixup(this[k]);
+	}
 }
 
-FS = {
+var FS = {
 	testDir: function(path, cb1, cb2) {
 		FS.getFile(path+"/", cb1, cb2);
 	},
 	getFile: function(path, cb1, cb2, pot) {
-		if (pot !== undefined)
+		if (pot !== undefined) {
 			return cb1(pot);
+		}
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState === 4) {
-				if (xhr.status === 200)
+				if (xhr.status === 200) {
 					cb1(xhr.responseText);
-				else
+				}
+				else {
 					cb2();
+				}
 			}
 		};
 		xhr.open("GET", path);
@@ -91,28 +100,36 @@ function regExpEscape(literal_string) {
 function FSDict(path, suf, text) {
 	this.path = path;
 	this.ensure = function(key) {
-		if (key in this) return;
-		if (key.slice(-5) === ".json")
+		if (key.slice(-5) === ".json") {
 			key = key.slice(0, -5);
-		if (key.slice(-1) === "/")
+		}
+		else if (key.slice(-1) === "/") {
 			key = key.slice(0, -1);
+		}
+		if (key in this) {
+			return;
+		}
 		var newpath = path + "/" + key;
 		FS.testDir(newpath, function(text) {
 			this[key] = new FSDict(newpath, suf+"/"+key, text);
 		}, function(pot) {
-			if (key.lastIndefOf(".") === -1)
+			if (key.lastIndefOf(".") === -1) {
 				newpath += ".json";
+			}
 			FS.getFile(newpath, function(contents) {
 				var ext = newpath.slice(newpath.lastIndefOf(".")+1);
-				if (ext === "json")
+				if (ext === "json") {
 					this[key] = this[key+".json"] = new DupliDict(JSON.parse(contents), this);
-				else if (ext === "pcre")
+				}
+				else if (ext === "pcre") {
 					this[key] = new RegExp(
 						"(?u)" + contents.slice(contents.indexOf("(?"))
 					);
-				else
+				}
+				else {
 					console.log("unknown file extension:", ext, "in", path,
 					            "[", key, "]");
+				}
 			}, function(){}, pot);
 		});
 	}
@@ -134,8 +151,9 @@ function Declinator(URL1, URL2) {
 	this.detector = this.settings[this.DETECTOR_NAME];
 
 	this.declmod = function(name, locale) {
-		if (locale === undefined)
+		if (locale === undefined) {
 			locale = this.defaultLocale;
+		}
 		var settings_ = this.settings;
 		var detector_ = this.detector;
 		if (locale !== this.defaultLocale) {
@@ -150,8 +168,9 @@ function Declinator(URL1, URL2) {
 		var ret = {};
 		for (var k in dic) {
 			var v = this._decld(word, dic[k], gen);
-			if (v === undefined)
+			if (v === undefined) {
 				return;
+			}
 			ret[k] = v;
 		}
 		return ret;
@@ -159,23 +178,27 @@ function Declinator(URL1, URL2) {
 
 	this._decld = function(word, dic, gen) {
 		var s = this._getSuf(word, gen);
-		if (s[1] !== -1)
+		if (s[1] !== -1) {
 			return s.slice(0, s[1]) + s[0];
+		}
 	}
 
 	this._getSuf = function(word, dic0, gen) {
-		if (gen === "auto")
+		if (gen === "auto") {
 			gen = this.findGender(word);
+		}
 		var dic = dic0[gen];
-		if (dic === undefined)
+		if (dic === undefined) {
 			for (var k in dic0) {
 				dic = dic0[k];
 				break;
 			}
+		}
 		for (var i=0; i<word.length; i++) {
 			var k = word.slice(i);
-			if (dic[k] !== undefined)
+			if (dic[k] !== undefined) {
 				return [dic[k], i];
+			}
 		}
 		return ["", -1];
 	}
