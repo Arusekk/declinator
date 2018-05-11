@@ -149,6 +149,7 @@ function Declinator(URL1, URL2) {
 
 	this.settings = this.settingsAll[this.defaultLocale];
 	this.detector = this.settings[this.DETECTOR_NAME];
+	this.letters = "[^\W\d_]+";
 
 	this.declmod = function(name, gen, locale) {
 		if (typeof locale === "undefined") {
@@ -163,7 +164,9 @@ function Declinator(URL1, URL2) {
 		var match = detector_.exec(name);
 		var ans = {};
 		if (gen === "auto") {
-			gen = this.findGender(letters.exec(match[detector_.namedGroups["first"]])[0]);
+			gen = this.findGender(new RegExp(this.letters).exec(
+					match[detector_.namedGroups["first"]]
+			)[0]);
 		}
 		for (var key in detector_.namedGroups) {
 			var val = match[detector_.namedGroups[key]];
@@ -174,7 +177,8 @@ function Declinator(URL1, URL2) {
 			var sets = settings_[key];
 			var defs = sets[0];
 			var w;
-			while (w = letters.exec(val)) {
+			var letters = new RegExp(this.letters, "g");
+			while ((w = letters.exec(val))) {
 				var word = w[0];
 				var wordds = [];
 				for (var i = 1; i < sets.length; i ++) {
@@ -183,18 +187,21 @@ function Declinator(URL1, URL2) {
 						wordds.push(x);
 					}
 				}
-				if (wordds.length === 0)
+				if (wordds.length === 0) {
 					return; // TODO: throw
-				wordd = wordds[this._getSuf(word, defs, gen)[0]]; // ### maybe?
+				}
+				var wordd = wordds[this._getSuf(word, defs, gen)[0]]; // ### maybe?
 				for (var cas in wordd) {
-					if (typeof ansv[cas] === "undefined")
+					if (typeof ansv[cas] === "undefined") {
 						ansv[cas] = val;
+					}
 					ansv[cas] = ansv[cas].replace(word, wordd[cas]);
 				}
 			}
 			for (var ca in ansv) {
-				if (typeof ans[ca] === "undefined")
+				if (typeof ans[ca] === "undefined") {
 					ans[ca] = "";
+				}
 				ans[ca] += ansv[ca];
 			}
 		}
