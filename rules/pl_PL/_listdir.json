@@ -1,0 +1,18 @@
+[
+	"detection.pcre",
+	"illustration",
+
+	"first",
+	"last",
+	"inter",
+	"title",
+	"suffix",
+
+	"adjective",
+	"noun",
+	"noun_eshift",
+	"preposition",
+	"short",
+
+	"_listdir"
+]
