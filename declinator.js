@@ -21,12 +21,13 @@
 /*
  * minimal support for verbose PCRE
  */
-function PCRE(pattern) {
+function pcre(pattern) {
 	var namedGroups = {};
 	var opts = "";
-	var pattern = pattern.replace(/\(\?([a-z]+)\)/g, function(mat, g1) { opts += g1; return ""; });
-	if (opts.indexOf("x") !== -1)
+	pattern = pattern.replace(/\(\?([a-z]+)\)/g, function(mat, g1) { opts += g1; return ""; });
+	if (opts.indexOf("x") !== -1) {
 		pattern = pattern.replace(/\s/g, "");
+	}
 	opts = opts.replace(/[x]/,"");
 	var groupp = /\((?:\?P<([^>]*)>|([^\?]))/g;
 	var m, idx = 0;
@@ -105,7 +106,7 @@ function DupliDict(obj, par) {
 		}
 
 		for (k in this) {
-			if (({}).hasOwnProperty.call(this, k) && k != "_par") {
+			if (({}).hasOwnProperty.call(this, k) && k.slice(0,1) !== "_") {
 				this[k] = this._fixup(this[k]);
 			}
 		}
@@ -115,12 +116,16 @@ function DupliDict(obj, par) {
 		else if (typeof this._par !== "undefined") {
 			this._par._success = false;
 		}
-	}
+	};
 }
 
 var FS = {
 	testDir: function(path, cb1, cb2) {
-		FS.getFile(path+"/", cb1, cb2);
+		FS.getFile(path+"/", cb1, function() {
+			FS.getFile(path+"/_listdir.json", function() {
+				cb1();
+			}, cb2);
+		});
 	},
 	getFile: function(path, cb1, cb2, pot) {
 		if (typeof pot !== "undefined") {
@@ -130,12 +135,7 @@ var FS = {
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
-					if (xhr.status === 400) {
-						cb1();
-					}
-					else {
-						cb1(xhr.responseText);
-					}
+					cb1(xhr.responseText);
 				}
 				else {
 					cb2();
@@ -168,19 +168,19 @@ function FSDict(path, suf, text) {
 		var newpath = path + "/" + key;
 		var ref = this;
 		FS.testDir(newpath, function(text) {
-			ref[key] = new FSDict(newpath, suf+"/"+key, text);
+			ref[key] = new FSDict(newpath, suf + "/" + key, text);
 		}, function(pot) {
 			if (key.lastIndexOf(".") === -1) {
 				newpath += ".json";
 			}
 			FS.getFile(newpath, function(contents) {
-				var ext = newpath.slice(newpath.lastIndexOf(".")+1);
+				var ext = newpath.slice(newpath.lastIndexOf(".") + 1);
 				if (ext === "json") {
 					ref[key] = ref[key+".json"] = ref._fixup(JSON.parse(contents));
 					ref._commitInclusion(ref._par);
 				}
 				else if (ext === "pcre") {
-					var nv = PCRE(
+					var nv = pcre(
 						contents.replace("(*UTF8)", "(?u)")
 					);
 					nv._commitInclusion = function(){};
@@ -194,7 +194,7 @@ function FSDict(path, suf, text) {
 					cb(ref[key]);
 				}
 			}, function() {
-				ref[key] = new FSDict(newpath, suf+"/"+key);
+				ref[key] = new FSDict(newpath, suf + "/" + key);
 			}, pot);
 		});
 	};
@@ -213,13 +213,14 @@ function FSDict(path, suf, text) {
 			ref._ensure(m[1]);
 			count ++;
 		}
-		
 	}, function() {
-		ref._ensure("_listdir", function(l) {
-			for (var i = 0; i < l.length; i ++) {
-				ref._ensure(l[i]);
-			}
-		});
+		if (path.lastIndexOf("/_") <= path.lastIndexOf("/")) {
+			ref._ensure("_listdir", function(l) {
+				for (var i = 0; i < l.length; i ++) {
+					ref._ensure(l[i]);
+				}
+			});
+		}
 	}, text);
 }
 
@@ -229,18 +230,20 @@ function Declinator(URL1, URL2) {
 	this.settingsAll = new FSDict(URL1+URL2, URL2);
 
 	this.langJsToIso = function(l) {
-		if (l.length === 2)
+		if (l.length === 2) {
 			return l + "_" + l.toUpperCase();
+		}
 		return l.replace("-", "_");
-	}
+	};
 
 	this.getDefaultLocale = function() {
 		for (var i = 0; i < navigator.languages.length; i ++) {
 			var guess = this.langJsToIso(navigator.languages[i]);
-			if (guess in this.settingsAll)
+			if (guess in this.settingsAll) {
 				return guess;
+			}
 		}
-	}
+	};
 
 	this.declmod = function(name, gen, locale) {
 		if (typeof locale === "undefined") {
@@ -258,9 +261,10 @@ function Declinator(URL1, URL2) {
 					match[detector_.namedGroups["first"]]
 			)[0]);
 		}
+		// eslint-disable-next-line guard-for-in
 		for (var key in detector_.namedGroups) {
 			var val = match[detector_.namedGroups[key]];
-			if (!val) {
+			if (key.slice(0,1) === "_" || !val) {
 				continue;
 			}
 			var ansv = {};
