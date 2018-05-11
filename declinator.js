@@ -29,14 +29,18 @@ function pcre(pattern) {
 		pattern = pattern.replace(/\s/g, "");
 	}
 	opts = opts.replace(/[x]/,"");
-	var groupp = /\((?:\?P<([^>]*)>|([^\?]))/g;
+	var groupp = /\((?:\?P<([^>]*)>|([^?]))/g;
 	var m, idx = 0;
+	if (opts.indexOf("u") !== -1) {
+		pattern = pattern.replace("\\W", "\x00-\/:-@\\[-^`\\{-\xBF\xF7\u2000-\uffff");
+	}
 	while ((m = groupp.exec(pattern))) {
 		if (m[1]) {
 			namedGroups[m[1]] = ++idx;
 		}
 	}
 	pattern = pattern.replace(groupp, "($2").replace(/([^\\](?:\\\\)*)\{,/g, "$1{0,");
+	console.log(pattern);
 	// eslint-disable-next-line security/detect-non-literal-regexp
 	var code = new RegExp(pattern, opts);
 	code.namedGroups = namedGroups;
@@ -274,7 +278,7 @@ function Declinator(URL1, URL2) {
 		var match = detector_.exec(name);
 		var ans = {};
 		if (gen === "auto") {
-			gen = this.findGender(/[^\W\d_]+/u.exec(
+			gen = this.findGender(pcre("(?u)[^\\W\\d_]+").exec(
 					match[detector_.namedGroups["first"]]
 			)[0]);
 		}
@@ -288,7 +292,7 @@ function Declinator(URL1, URL2) {
 			var sets = settings_[key];
 			var defs = sets[0];
 			var w;
-			var letters = /[^\W\d_]+/gu;
+			var letters = pcre("(?gu)[^\\W\\d_]+");
 			while ((w = letters.exec(val))) {
 				var word = w[0];
 				var wordds = [];
