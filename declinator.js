@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Declinator.  If not, see <http://www.gnu.org/licenses/>.
  */
+/* eslint "security/detect-object-injection": "off" */
 "use strict";
 
 function DupliDict(obj, par) {
@@ -93,8 +94,8 @@ var FS = {
 	}
 };
 
-function regExpEscape(literal_string) {
-	return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
+function regExpEscape(literal) {
+	return literal.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
 }
 
 function FSDict(path, suf, text) {
@@ -132,7 +133,7 @@ function FSDict(path, suf, text) {
 				}
 			}, function(){}, pot);
 		});
-	}
+	};
 
 	FS.getFile(function(txt) {
 		var m, re = new RegExp("/"+regExpEscape(suf)+"/([^\"]+)", "g");
@@ -149,7 +150,6 @@ function Declinator(URL1, URL2) {
 
 	this.settings = this.settingsAll[this.defaultLocale];
 	this.detector = this.settings[this.DETECTOR_NAME];
-	this.letters = "[^\W\d_]+";
 
 	this.declmod = function(name, gen, locale) {
 		if (typeof locale === "undefined") {
@@ -164,7 +164,7 @@ function Declinator(URL1, URL2) {
 		var match = detector_.exec(name);
 		var ans = {};
 		if (gen === "auto") {
-			gen = this.findGender(new RegExp(this.letters).exec(
+			gen = this.findGender(/[^\W\d_]+/.exec(
 					match[detector_.namedGroups["first"]]
 			)[0]);
 		}
@@ -177,7 +177,7 @@ function Declinator(URL1, URL2) {
 			var sets = settings_[key];
 			var defs = sets[0];
 			var w;
-			var letters = new RegExp(this.letters, "g");
+			var letters = /[^\W\d_]+/g;
 			while ((w = letters.exec(val))) {
 				var word = w[0];
 				var wordds = [];
