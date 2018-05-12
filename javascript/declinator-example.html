@@ -1,0 +1,52 @@
+<!DOCTYPE html 5>
+<html>
+	<head>
+		<title>Declinator</title>
+		<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+		<script>
+
+function getFromHref() {
+	var idx = location.href.indexOf("#");
+	if (idx !== -1) {
+		declin.value = decodeURIComponent(location.href.slice(idx + 1));
+		setTimeout(function(){
+			document.getElementsByTagName("button")[0].click();
+		}, 3000);
+	}
+
+	if (!("declinator" in window))
+(function(xhr) {
+	xhr.open("GET",
+		"https://raw.githubusercontent.com/Arusekk/declinator/javascript/declinator.js");
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			eval(xhr.responseText);
+		}
+	};
+	xhr.send();
+})(new XMLHttpRequest());
+
+}
+
+function setHref(v) {
+	declout.innerHTML = declinator.format(
+		declinator.getIllustration().teststring,
+		declinator.declmod(v)
+	);
+	var idx = location.href.indexOf("#");
+	if (idx === -1) {
+		idx = location.href.length;
+	}
+	location.href = location.href.slice(0,idx) + "#" + encodeURIComponent(v);
+}
+
+		</script>
+	</head>
+	<body onload="getFromHref()">
+		<script type="text/javascript" src="declinator.js"></script>
+		<input type="text" value="" id="declin" placeholder="Input a name..." />
+		<button onclick="setHref(declin.value);">Decline!</button>
+		<br />
+		<pre id="declout">Output will go here.</pre>
+	</body>
+</html>
