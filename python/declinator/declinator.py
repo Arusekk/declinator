@@ -21,7 +21,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Declinator.  If not, see <http://www.gnu.org/licenses/>.
 
-import duplidict
+__all__ = ["findgender", "declmod"]
+
+from . import duplidict
 
 import collections
 import locale
