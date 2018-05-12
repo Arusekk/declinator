@@ -17,7 +17,7 @@ function getFromHref() {
 	if (!("declinator" in window))
 (function(xhr) {
 	xhr.open("GET",
-		"https://raw.githubusercontent.com/Arusekk/declinator/javascript/declinator.js");
+		"https://raw.githubusercontent.com/Arusekk/declinator/master/javascript/declinator.js");
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			eval(xhr.responseText);

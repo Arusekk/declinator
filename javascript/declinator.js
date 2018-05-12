@@ -376,7 +376,7 @@ function Declinator(URL1, URL2) {
 window.declinator = new Declinator(
 // 	"https://github.com/Arusekk/declinator/raw/",
 	"https://raw.githubusercontent.com/Arusekk/declinator/",
-	"javascript/rules"
+	"master/rules"
 // 	"",
 // 	"rules"
 );
