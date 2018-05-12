@@ -40,7 +40,6 @@ function pcre(pattern) {
 		}
 	}
 	pattern = pattern.replace(groupp, "($2").replace(/([^\\](?:\\\\)*)\{,/g, "$1{0,");
-	console.log(pattern);
 	// eslint-disable-next-line security/detect-non-literal-regexp
 	var code = new RegExp(pattern, opts);
 	code.namedGroups = namedGroups;
@@ -218,7 +217,7 @@ function FSDict(path, suf, text) {
 			count ++;
 		}
 	}, function() {
-		if (path.lastIndexOf("/_") <= path.lastIndexOf("/")) {
+		if (path.lastIndexOf("/_") == -1) {
 			ref._ensure("_listdir", function(l) {
 				for (var i = 0; i < l.length; i ++) {
 					ref._ensure(l[i]);
@@ -378,4 +377,6 @@ window.declinator = new Declinator(
 // 	"https://github.com/Arusekk/declinator/raw/",
 	"https://raw.githubusercontent.com/Arusekk/declinator/",
 	"javascript/rules"
+// 	"",
+// 	"rules"
 );
