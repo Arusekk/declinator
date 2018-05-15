@@ -15,7 +15,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Declinator.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* eslint "security/detect-object-injection": "off" */
+/* eslint "security/detect-object-injection": "off",
+   no-mixed-spaces-and-tabs: ["error", "smart-tabs"] */
 "use strict";
 
 /*
@@ -218,7 +219,7 @@ function FSDict(path, suf, text) {
 			count ++;
 		}
 	}, function() {
-		if (path.lastIndexOf("/_") == -1) {
+		if (path.lastIndexOf("/_") === -1) {
 			ref._ensure("_listdir", function(l) {
 				for (var i = 0; i < l.length; i ++) {
 					ref._ensure(l[i]);
