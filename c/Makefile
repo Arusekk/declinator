@@ -49,3 +49,9 @@ distclean:
 test: $(EXEC)
 	LD_LIBRARY_PATH=. LC_ALL=pl_PL.UTF-8 ./declinator 'Jean Babtista Lariron-Święciszewicki'
 .PHONY: test
+
+install:
+	$(INSTALL) -Dm755 $(EXEC) $(DESTDIR)$(bindir)/$(EXEC)
+	$(INSTALL) -Dm755 $(EXEC) $(DESTDIR)$(bindir)/$(EXEC)
+	$(INSTALL) -Dm755 $(EXEC) $(DESTDIR)$(bindir)/$(EXEC)
+.PHONY: install
