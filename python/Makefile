@@ -1,9 +1,11 @@
-PYTHON=python
+PYTHON?=python
 
 all:
-	$(PYTHON) -c 'import declinator'
+	$(PYTHON) setup.py build
 test:
 	$(PYTHON) -m declinator.test |tee testout
 	wc -c < testout |grep '^0$$'
+install:
+	$(PYTHON) setup.py install --prefix=$(prefix) --root=$(DESTDIR)
 clean distclean:
-.PHONY: all clean distclean test
+.PHONY: all clean distclean test install
