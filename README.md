@@ -11,3 +11,11 @@ Automatised declension of names
 # Supported languages
  * polish
  * ... in spe: other slavic, lithuanian and hungarian
+
+# Using, copying, distributing etc.
+Why AGPL? Don't get me wrong. I want to make sure everybody affected by my code
+can see the source. I don't care whether any software using Declinator
+as a library is free or not (free as in free speech). I just want the contributions
+*to declinator* to be open-source, in order to keep the project alive.
+
+See the full text of Affero General Public License 3.0 in [LICENSE.md](LICENSE.md).
