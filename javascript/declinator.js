@@ -32,7 +32,8 @@ function pcre(pattern) {
 	var groupp = /\((?:\?P<([^>]*)>|([^?]))/g;
 	var m, idx = 0;
 	if (opts.indexOf("u") !== -1) {
-		pattern = pattern.replace("\\W", "\x00-\/:-@\\[-^`\\{-\xBF\xF7\u2000-\uffff");
+		pattern = pattern.replace(/\\W/g, "\x00-\/:-@\\[-^`\\{-\xbf\xf7\u2000-\uffff");
+		pattern = pattern.replace(/\\w/g, "0-9A-Z_a-z\xc0-\xf6\xf8-\u1fff");
 	}
 	while ((m = groupp.exec(pattern))) {
 		if (m[1]) {
@@ -275,6 +276,9 @@ function Declinator(URL1, URL2) {
 		var settings_ = this.settingsAll[locale];
 		var detector_ = settings_[this.DETECTOR_NAME];
 		var match = detector_.exec(name);
+		if (!match) {
+			return; // TODO: throw
+		}
 		var ans = {};
 		if (gen === "auto") {
 			gen = this.findGender(pcre("(?u)[^\\W\\d_]+").exec(
