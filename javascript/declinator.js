@@ -29,7 +29,6 @@ function pcre(pattern) {
 	if (opts.indexOf("x") !== -1) {
 		pattern = pattern.replace(/\s/g, "");
 	}
-	opts = opts.replace(/[x]/,"");
 	var groupp = /\((?:\?P<([^>]*)>|([^?]))/g;
 	var m, idx = 0;
 	if (opts.indexOf("u") !== -1) {
@@ -42,6 +41,7 @@ function pcre(pattern) {
 		}
 	}
 	pattern = pattern.replace(groupp, "($2").replace(/([^\\](?:\\\\)*)\{,/g, "$1{0,");
+	opts = opts.replace(/[xu]/g,"");
 	// eslint-disable-next-line security/detect-non-literal-regexp
 	var code = new RegExp(pattern, opts);
 	code.namedGroups = namedGroups;
