@@ -31,6 +31,8 @@ import os.path
 import re
 
 default_locale, _ = locale.getlocale()
+if default_locale is None:
+  default_locale = 'en_US'
 settings_all = duplidict.FSDict(os.path.join(os.path.dirname(__file__),"rules"))
 settings = settings_all[default_locale]
 
