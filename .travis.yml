@@ -4,8 +4,13 @@ python:
 addons:
   apt:
     packages:
+      - debhelper
+      - fakeroot
+      - automake
+      - rpm
       - libjson0-dev
       - libpcre3-dev
 script:
-  - make
-  - make test
+  - export DECLINATOR_VERSION=$(rpm -q --qf '%{v}' --specfile declinator.spec) && echo $DECLINATOR_VERSION
+  - mkdir -p ~/rpmbuild/SOURCES && git archive HEAD --prefix=declinator-${DECLINATOR_VERSION}/ | gzip > ~/rpmbuild/SOURCES/v${DECLINATOR_VERSION}.tar.gz
+  - rpmbuild -ba --nodeps declinator.spec
