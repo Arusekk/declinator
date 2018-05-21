@@ -11,6 +11,6 @@ addons:
       - libjson0-dev
       - libpcre3-dev
 script:
-  - export DECLINATOR_VERSION=$(rpm -q --qf '%{v}' --specfile declinator.spec) && echo $DECLINATOR_VERSION
+  - export DECLINATOR_VERSION=$(rpm -q --qf '%{v}\n' --specfile declinator.spec|head -1) && echo $DECLINATOR_VERSION
   - mkdir -p ~/rpmbuild/SOURCES && git archive HEAD --prefix=declinator-${DECLINATOR_VERSION}/ | gzip > ~/rpmbuild/SOURCES/v${DECLINATOR_VERSION}.tar.gz
   - rpmbuild -ba --nodeps declinator.spec
