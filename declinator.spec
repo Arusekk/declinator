@@ -83,23 +83,21 @@ This package contains python interface
 %autosetup
 
 %build
-pushd c
+cd c
 mkdir -p .m4/m4
 autoreconf -si
 %GNUconfigure
 %make_build
-popd
-pushd python
+cd ../python
 %py3_build
-popd
+cd ..
 
 %install
-pushd c
+cd c
 %make_install
-popd
-pushd python
+cd ../python
 %py3_install
-popd
+cd ..
 
 
 %changelog
