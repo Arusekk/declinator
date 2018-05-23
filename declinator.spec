@@ -115,7 +115,7 @@ Ten pakiet zawiera interfejs pythona
 
 
 %prep
-%autosetup
+%setup
 
 %build
 cd c

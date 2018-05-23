@@ -8,9 +8,10 @@ addons:
       - fakeroot
       - automake
       - rpm
-      - libjson0-dev
       - libpcre3-dev
+      - libjson-c-dev
 script:
   - export DECLINATOR_VERSION=$(rpm -q --qf '%{v}\n' --specfile declinator.spec|head -1) && echo $DECLINATOR_VERSION
   - mkdir -p ~/rpmbuild/SOURCES && git archive HEAD --prefix=declinator-${DECLINATOR_VERSION}/ | gzip > ~/rpmbuild/SOURCES/v${DECLINATOR_VERSION}.tar.gz
-  - rpmbuild -ba --nodeps declinator.spec
+  - rpm --eval '%GNUconfigure'
+  - rpmbuild -ba --nodeps --define='__mydir ${_mydir}' --define='_dr ${dr}' --define='_dirs ${dirs}' --define='_coin ${_coin}' --define='_ACLOCAL_FLAGS ${ACLOCAL_FLAGS}' --define='_k ${k}' --define='_macrodirs ${macrodirs}' --define='_aclocalinclude ${aclocalinclude}' declinator.spec
