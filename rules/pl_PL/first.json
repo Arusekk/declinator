@@ -1,38 +1,46 @@
-[{"f":{"":0},"m":{"":0,"i":1,"y":1}},
+[{"f":{"":0},"m":{"":0,"i":1,"y":1,"ko":1}},
 {
-	"#include": "noun_eshift"
-},{
-	"#include": "noun",
 	"genitive": {
+		"f": {},
 		"m": {
 			"o":"ona"
 		}
 	},
 	"dative": {
+		"f": {},
 		"m": {
 			"o":"onowi"
 		}
 	},
 	"accusative": {
+		"f": {},
 		"m": {
 			"o":"ona"
 		}
 	},
 	"instrumental": {
+		"f": {},
 		"m": {
 			"o":"onem"
 		}
 	},
 	"locative": {
+		"f": {},
 		"m": {
 			"o":"onie"
 		}
 	},
 	"vocative": {
+		"f": {},
 		"m": {
 			"o":"onie"
 		}
 	}
+},
+{
+	"#include": "noun_eshift"
+},{
+	"#include": "noun"
 },{
 	"#include":"adjective"
 }]
